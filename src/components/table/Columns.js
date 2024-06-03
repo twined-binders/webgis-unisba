@@ -1,0 +1,18 @@
+export const COLUMNS = [
+  { name: "No", uid: "no" },
+  { name: "Nama", uid: "nama" },
+  { name: "Nim", uid: "nim" },
+  { name: "Fakultas", uid: "fakultas" },
+  { name: "Prodi", uid: "prodi" },
+  { name: "Kelas", uid: "kelas" },
+  { name: "Email", uid: "email" },
+  { name: "Alamat", uid: "alamat" },
+  { name: "Rt/Rw", uid: "rt_rw" },
+  { name: "Dusun", uid: "dusun" },
+  { name: "Kodepos", uid: "kodepos" },
+  { name: "Desa/Kelurahan", uid: "desa" },
+  { name: "Kecamatan", uid: "kecamatan" },
+  { name: "Kota", uid: "kota" },
+  { name: "Provinsi", uid: "provinsi" },
+  { name: "Aksi", uid: "aksi" },
+];
