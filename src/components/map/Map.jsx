@@ -43,12 +43,13 @@ const Map = ({ data }) => {
         mapboxAccessToken={mapboxApi}
         mapStyle="mapbox://styles/mapbox/streets-v12"
         initialViewState={{
-          latitude: -8.0338667,
-          longitude: 112.2096911,
+          latitude: -8.098606,
+          longitude: 112.183431,
           zoom: 11,
         }}
         style={{ width: "100%", height: 480, borderRadius: 10 }}
       >
+        <Marker latitude={-8.098606} longitude={112.183431} />
         {markers.map((marker) => (
           <Marker key={marker.id} latitude={marker.latitude} longitude={marker.longitude} anchor="bottom" color="red" scale={0.8} />
         ))}

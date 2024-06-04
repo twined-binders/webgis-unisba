@@ -403,7 +403,7 @@ export default function UpdateModalComponent({ isOpen, onClose, mahasiswa }) {
               </div>
             </div>
             <div className="flex mt-2 gap-3">
-              <div className="relative basis-2/3">
+              <div className="relative w-full">
                 <input
                   aria-label="Masukkan Kota"
                   type="text"
@@ -422,7 +422,7 @@ export default function UpdateModalComponent({ isOpen, onClose, mahasiswa }) {
                   Kota
                 </label>
               </div>
-              <div className="relative basis-1/3">
+              {/* <div className="relative basis-1/3">
                 <input
                   aria-label="Masukkan Latitude"
                   type="number"
@@ -440,10 +440,10 @@ export default function UpdateModalComponent({ isOpen, onClose, mahasiswa }) {
                 >
                   Latitude
                 </label>
-              </div>
+              </div> */}
             </div>
             <div className="flex mt-2 gap-3">
-              <div className="relative basis-2/3">
+              <div className="relative w-full">
                 <input
                   aria-label="Masukkan Provinsi"
                   type="text"
@@ -462,7 +462,7 @@ export default function UpdateModalComponent({ isOpen, onClose, mahasiswa }) {
                   Provinsi
                 </label>
               </div>
-              <div className="relative basis-1/3">
+              {/* <div className="relative basis-1/3">
                 <input
                   aria-label="Masukkan Longitude"
                   type="number"
@@ -480,7 +480,7 @@ export default function UpdateModalComponent({ isOpen, onClose, mahasiswa }) {
                 >
                   Longitude
                 </label>
-              </div>
+              </div> */}
             </div>
           </div>
         </ModalBody>
