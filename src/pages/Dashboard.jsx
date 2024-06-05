@@ -145,7 +145,7 @@ function Dashboard() {
             <Calendar aria-label="Date (Read Only)" value={today(getLocalTimeZone())} isReadOnly color="primary" />
           </div>
           <div>
-            <Link href="/about" className="w-full">
+            <Link href="/mahasiswa" className="w-full">
               <Button color="primary" startContent={<UserIcon />} className="-mt-4 w-full">
                 Data Mahasiswa
               </Button>

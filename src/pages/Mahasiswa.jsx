@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { Button, useDisclosure } from "@nextui-org/react";
 import { PlusIcon } from "../components/icons/PlusIcon";
 
-export default function About() {
+export default function Mahasiswa() {
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();

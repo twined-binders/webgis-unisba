@@ -69,8 +69,8 @@ export default function MainNavbar() {
           <NavbarItem isActive={location.pathname === "/dashboard"} className="sm:w-16 md:w-auto">
             <Link href="/dashboard">Dashboard</Link>
           </NavbarItem>
-          <NavbarItem isActive={location.pathname === "/about"} className="sm:w-16 md:w-auto">
-            <Link href="/about">Tentang</Link>
+          <NavbarItem isActive={location.pathname === "/mahasiswa"} className="sm:w-16 md:w-auto">
+            <Link href="/mahasiswa">Mahasiswa</Link>
           </NavbarItem>
         </NavbarContent>
         <NavbarContent className="flex gap-4" justify="center">

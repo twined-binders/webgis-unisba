@@ -4,13 +4,13 @@ import AppRoutes from "./configs/routing-rule/AppsRouting"; // Ensure this path 
 import { NextUIProvider } from "@nextui-org/react";
 import { BrowserRouter as Router } from "react-router-dom";
 import "./index.css";
+import router from "./configs/routing-rule/AppsRouting";
+import { RouterProvider } from "react-router-dom";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <NextUIProvider>
-      <Router>
-        <AppRoutes />
-      </Router>
+      <RouterProvider router={router} />
     </NextUIProvider>
   </React.StrictMode>
 );

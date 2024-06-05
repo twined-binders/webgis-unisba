@@ -21,8 +21,8 @@ export default function UpdateModalComponent({ isOpen, onClose, mahasiswa }) {
     kecamatan: "",
     kota: "",
     provinsi: "",
-    latitude: "",
-    longitude: "",
+    // latitude: "",
+    // longitude: "",
   });
 
   useEffect(() => {
@@ -35,19 +35,14 @@ export default function UpdateModalComponent({ isOpen, onClose, mahasiswa }) {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: name === "latitude" || name === "longitude" ? parseFloat(value) : value,
+      [name]: value,
     }));
   };
 
   const handleSubmit = async () => {
     try {
-      const updatedData = {
-        ...formData,
-        latitude: parseFloat(formData.latitude),
-        longitude: parseFloat(formData.longitude),
-      };
       const docRef = doc(db, "mahasiswa", mahasiswa.id);
-      await updateDoc(docRef, updatedData);
+      await updateDoc(docRef, formData);
       toast.success("Data berhasil diubah !");
       onClose(); // Close the modal after successful update
     } catch (error) {
@@ -57,7 +52,24 @@ export default function UpdateModalComponent({ isOpen, onClose, mahasiswa }) {
     }
   };
 
-  const { nama, nim, fakultas, prodi, email, kelas, alamat, rt, rw, dusun, desa, kecamatan, kota, provinsi, kodePos, latitude, longitude } = formData;
+  const {
+    nama,
+    nim,
+    fakultas,
+    prodi,
+    email,
+    kelas,
+    alamat,
+    rt,
+    rw,
+    dusun,
+    desa,
+    kecamatan,
+    kota,
+    provinsi,
+    kodePos,
+    // latitude, longitude
+  } = formData;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="w-full" size="5xl">

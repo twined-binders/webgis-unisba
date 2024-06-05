@@ -21,14 +21,14 @@ export default function MahasiswaForm({ isOpen, onClose }) {
   const [kecamatan, setKecamatan] = useState("");
   const [kota, setKota] = useState("");
   const [provinsi, setProvinsi] = useState("");
-  const [latitude, setLatitude] = useState("");
-  const [longitude, setLongitude] = useState("");
+  // const [latitude, setLatitude] = useState("");
+  // const [longitude, setLongitude] = useState("");
 
   // const timestamp = new Date().getTime();
 
   const nimNumber = parseInt(nim); // Convert nim to a number
-  const latitudeNumber = parseFloat(latitude); // Convert latitude to a number
-  const longitudeNumber = parseFloat(longitude);
+  // const latitudeNumber = parseFloat(latitude); // Convert latitude to a number
+  // const longitudeNumber = parseFloat(longitude);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -49,8 +49,8 @@ export default function MahasiswaForm({ isOpen, onClose }) {
         kecamatan: kecamatan,
         kota: kota,
         provinsi: provinsi,
-        latitude: latitudeNumber,
-        longitude: longitudeNumber,
+        // latitude: latitudeNumber,
+        // longitude: longitudeNumber,
       });
       toast.success("Berhasil menambah data!", {
         position: "top-center",
@@ -69,8 +69,8 @@ export default function MahasiswaForm({ isOpen, onClose }) {
       setProdi("");
       setEmail("");
       setKelas("");
-      setLatitude("");
-      setLongitude("");
+      // setLatitude("");
+      // setLongitude("");
     } catch (err) {
       console.error("Error adding document: ", err);
       if (err.code === "permission-denied") {
