@@ -71,7 +71,7 @@ export default function TableComponent({ data, handleDelete }) {
                 {headerColumns.map((column) => {
                   switch (column.uid) {
                     case "no":
-                      return <TableCell key="no">{index + 1}</TableCell>;
+                      return <TableCell key="no">{startIndex + index + 1}</TableCell>;
                     case "nama":
                       return <TableCell key="nama">{mahasiswa.nama}</TableCell>;
                     case "nim":
