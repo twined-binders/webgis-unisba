@@ -69,6 +69,15 @@ export default function MahasiswaForm({ isOpen, onClose }) {
       setProdi("");
       setEmail("");
       setKelas("");
+      setAlamat("");
+      setDesa("");
+      setDusun("");
+      setKecamatan("");
+      setKodePos("");
+      setKota("");
+      setProvinsi("");
+      setRt("");
+      setRw("");
       // setLatitude("");
       // setLongitude("");
     } catch (err) {
