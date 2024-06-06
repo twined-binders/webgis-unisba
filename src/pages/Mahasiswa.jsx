@@ -8,11 +8,16 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Button, useDisclosure } from "@nextui-org/react";
 import { PlusIcon } from "../components/icons/PlusIcon";
+import * as XLSX from "xlsx";
+import { writeBatch } from "firebase/firestore";
 
 export default function Mahasiswa() {
   const [data, setData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const [input, setInput] = useState([]);
+  const [showSubmit, setShowSubmit] = useState(false);
+  const [fileName, setFileName] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -56,14 +61,65 @@ export default function Mahasiswa() {
   };
 
   const filteredMahasiswa = data?.filter((mahasiswa) => {
-    const namaQuery = mahasiswa.nama.toLowerCase().includes(searchQuery.toLowerCase());
-    const desaQuery = mahasiswa.desa.toLowerCase().includes(searchQuery.toLowerCase());
-    const kecamatanQuery = mahasiswa.kecamatan.toLowerCase().includes(searchQuery.toLowerCase());
-    const prodiQuery = mahasiswa.prodi.toLowerCase().includes(searchQuery.toLowerCase());
-    const fakultasQuery = mahasiswa.fakultas.toLowerCase().includes(searchQuery.toLowerCase());
+    const namaQuery = mahasiswa.nama?.toLowerCase().includes(searchQuery.toLowerCase()) || false;
+    const desaQuery = mahasiswa.desa?.toLowerCase().includes(searchQuery.toLowerCase()) || false;
+    const kecamatanQuery = mahasiswa.kecamatan?.toLowerCase().includes(searchQuery.toLowerCase()) || false;
+    const prodiQuery = mahasiswa.prodi?.toLowerCase().includes(searchQuery.toLowerCase()) || false;
+    // const fakultasQuery = mahasiswa.fakultas?.toLowerCase().includes(searchQuery.toLowerCase()) || false;
 
-    return namaQuery || desaQuery || kecamatanQuery || prodiQuery || fakultasQuery;
+    return namaQuery || desaQuery || kecamatanQuery || prodiQuery;
   });
+
+  //Untuk input data dari file excell
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      setFileName(file.name);
+      setShowSubmit(true);
+
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        const binaryStr = e.target.result;
+        const workbook = XLSX.read(binaryStr, { type: "binary" });
+        const sheetName = workbook.SheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const jsonData = XLSX.utils.sheet_to_json(worksheet);
+        setInput(jsonData);
+      };
+
+      reader.readAsArrayBuffer(file);
+    }
+  };
+
+  const performBatchWrite = async () => {
+    const batch = writeBatch(db);
+    const collectionRef = collection(db, "test3");
+
+    input.forEach((item) => {
+      const docRef = doc(collectionRef);
+      batch.set(docRef, item);
+    });
+
+    try {
+      await batch.commit();
+      console.log("Batch write successful!");
+      toast.success("Berhasil menambah data!", {
+        position: "top-center",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      setFileName("");
+      setShowSubmit(false);
+    } catch (error) {
+      console.error("Error performing batch write: ", error);
+    }
+  };
 
   return (
     <>
@@ -112,6 +168,29 @@ export default function Mahasiswa() {
         </div>
       </div>
       <MahasiswaForm isOpen={isOpen} onClose={onClose} />
+
+      <div className="relative my-6 p-4">
+        <input id="id-dropzone01" name="file-upload" type="file" className="hidden" onChange={handleFileUpload} />
+        <label htmlFor="id-dropzone01" className="relative flex cursor-pointer flex-col items-center gap-4 rounded border border-dashed border-slate-300 px-3 py-6 text-center text-sm font-medium transition-colors">
+          <span className="inline-flex h-12 items-center justify-center self-center rounded-full bg-slate-100/70 px-3 text-slate-400">
+            <svg xmlns="http://www.w3.org/2000/svg" aria-label="File input icon" role="graphics-symbol" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="h-6 w-6">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M12 16.5V9.75m0 0 3 3m-3-3-3 3M6.75 19.5a4.5 4.5 0 0 1-1.41-8.775 5.25 5.25 0 0 1 10.233-2.33 3 3 0 0 1 3.758 3.848A3.752 3.752 0 0 1 18 19.5H6.75Z" />
+            </svg>
+          </span>
+          <span className="text-slate-500">
+            Drag & drop or
+            <span className="text-emerald-500"> upload a file</span>
+          </span>
+        </label>
+        {fileName && <div className="mt-4 text-center text-slate-500">Selected file: {fileName}</div>}
+        {showSubmit && (
+          <div className="mt-4 text-center">
+            <Button onClick={performBatchWrite} color="primary">
+              Submit
+            </Button>
+          </div>
+        )}
+      </div>
     </>
   );
 }

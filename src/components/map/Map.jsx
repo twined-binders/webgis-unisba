@@ -16,7 +16,7 @@ const Map = ({ data }) => {
             const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json?access_token=${mapboxApi}`);
             const data = await response.json();
             const features = data.features;
-            console.log(data);
+
             if (features.length > 0) {
               const center = features[0].center;
               return {

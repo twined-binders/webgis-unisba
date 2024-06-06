@@ -6,15 +6,18 @@ import UpdateModalComponent from "../modal/updateModal";
 import React from "react";
 import { ChevronDownIcon } from "../icons/ChevronDownIcon";
 import { COLUMNS } from "./Columns";
+import db from "../../configs/firebase-config";
+import * as XLSX from "xlsx";
+import { doc, collection, writeBatch } from "firebase/firestore";
 
-const INITIAL_VISIBLE_COLUMNS = ["no", "nama", "nim", "prodi", "fakultas", "aksi"];
+const INITIAL_VISIBLE_COLUMNS = ["no", "nama", "nim", "prodi", "aksi"];
 
 export default function TableComponent({ data, handleDelete }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedMahasiswa, setSelectedMahasiswa] = useState(null);
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 15;
 
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -34,7 +37,7 @@ export default function TableComponent({ data, handleDelete }) {
 
   return (
     <>
-      <div>
+      <div className="py-6">
         <Table
           color="primary"
           selectionMode="single"
