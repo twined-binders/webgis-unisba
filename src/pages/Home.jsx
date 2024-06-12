@@ -3,6 +3,7 @@ import { collection, getDocs } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import db from "../configs/firebase-config";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
+import MapComponent from "../components/map/Map";
 
 export default function Home() {
   const [data, setData] = useState([]);
@@ -29,7 +30,7 @@ export default function Home() {
   return (
     <>
       <div className="px-4 relative">
-        <Map data={data} />
+        <MapComponent data={data} />
         <div className="my-6 absolute z-100 top-0.5 left-10">
           <input
             id="id-s03"

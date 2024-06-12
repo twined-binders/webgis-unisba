@@ -6,22 +6,20 @@ import UpdateModalComponent from "../modal/updateModal";
 import React from "react";
 import { ChevronDownIcon } from "../icons/ChevronDownIcon";
 import { COLUMNS } from "./Columns";
-import db from "../../configs/firebase-config";
-import * as XLSX from "xlsx";
-import { doc, collection, writeBatch } from "firebase/firestore";
 
 const INITIAL_VISIBLE_COLUMNS = ["no", "nama", "nim", "prodi", "aksi"];
 
-export default function TableComponent({ data, handleDelete }) {
+export default function TableComponent({ data, handleDelete, currentPage, setCurrentPage, itemsPerPage }) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedMahasiswa, setSelectedMahasiswa] = useState(null);
+  const [startIndex, setStartIndex] = useState();
 
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 15;
-
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const paginatedData = data.slice(startIndex, endIndex);
+  const paginatedData = React.useMemo(() => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    setStartIndex(startIndex);
+    return data.slice(startIndex, endIndex);
+  }, [currentPage, data, itemsPerPage]);
 
   const totalPages = Math.ceil(data.length / itemsPerPage);
 
@@ -34,6 +32,7 @@ export default function TableComponent({ data, handleDelete }) {
   const handleSelectionChange = useCallback((keys) => {
     setVisibleColumns(new Set(keys));
   }, []);
+  console.log(currentPage);
 
   return (
     <>

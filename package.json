@@ -12,11 +12,13 @@
   "dependencies": {
     "@nextui-org/react": "^2.3.5",
     "@tailwindcss/typography": "^0.5.12",
+    "chart.js": "^4.4.3",
     "csvtojson": "^2.0.10",
     "firebase": "^10.11.1",
     "framer-motion": "^11.1.7",
     "mapbox-gl": "^3.3.0",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
     "react-map-gl": "^7.1.7",
     "react-paginate": "^8.2.0",

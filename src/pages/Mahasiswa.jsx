@@ -18,6 +18,8 @@ export default function Mahasiswa() {
   const [input, setInput] = useState([]);
   const [showSubmit, setShowSubmit] = useState(false);
   const [fileName, setFileName] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -60,15 +62,25 @@ export default function Mahasiswa() {
     }
   };
 
+  const handleSearchChange = (e) => {
+    setSearchQuery(e.target.value);
+    setCurrentPage(1);
+  };
+
   const filteredMahasiswa = data?.filter((mahasiswa) => {
     const namaQuery = mahasiswa.nama?.toLowerCase().includes(searchQuery.toLowerCase()) || false;
     const desaQuery = mahasiswa.desa?.toLowerCase().includes(searchQuery.toLowerCase()) || false;
     const kecamatanQuery = mahasiswa.kecamatan?.toLowerCase().includes(searchQuery.toLowerCase()) || false;
     const prodiQuery = mahasiswa.prodi?.toLowerCase().includes(searchQuery.toLowerCase()) || false;
     // const fakultasQuery = mahasiswa.fakultas?.toLowerCase().includes(searchQuery.toLowerCase()) || false;
-
+    // setCurrentPage(1);
     return namaQuery || desaQuery || kecamatanQuery || prodiQuery;
   });
+
+  const onRowsPerPageChange = React.useCallback((e) => {
+    setItemsPerPage(Number(e.target.value));
+    setCurrentPage(1);
+  }, []);
 
   //Untuk input data dari file excell
   const handleFileUpload = (event) => {
@@ -94,7 +106,7 @@ export default function Mahasiswa() {
 
   const performBatchWrite = async () => {
     const batch = writeBatch(db);
-    const collectionRef = collection(db, "test3");
+    const collectionRef = collection(db, "mahasiswa");
 
     input.forEach((item) => {
       const docRef = doc(collectionRef);
@@ -133,7 +145,7 @@ export default function Mahasiswa() {
               placeholder="Cari Mahasiswa"
               aria-label="Search content"
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={handleSearchChange}
               className="peer relative h-10 w-full rounded border border-slate-200 px-4 pr-12 text-sm text-slate-500 outline-none transition-all autofill:bg-white invalid:border-pink-500 invalid:text-pink-500 focus:border-sky-500 focus:outline-none invalid:focus:border-pink-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
             />
             <svg
@@ -156,20 +168,32 @@ export default function Mahasiswa() {
             </span>
           </div>
         </div>
-        <div className="add">
-          <Button endContent={<PlusIcon />} color="primary" onPress={onOpen}>
-            Add New
-          </Button>
+        <div className="flex items-center gap-4">
+          <div>
+            <label className="flex items-center text-default-400 text-small">
+              Data per Halaman:
+              <select className="bg-transparent outline-none text-default-400 text-small" onChange={onRowsPerPageChange}>
+                <option value="5">5</option>
+                <option value="10">10</option>
+                <option value="15">15</option>
+              </select>
+            </label>
+          </div>
+          <div className="add">
+            <Button endContent={<PlusIcon />} color="primary" onPress={onOpen}>
+              Tambah
+            </Button>
+          </div>
         </div>
       </div>
       <div className="w-full flex flex-col px-4 gap-5">
         <div className="table-container grow">
-          <TableComponent data={filteredMahasiswa} handleDelete={handleDelete} />
+          <TableComponent data={filteredMahasiswa} handleDelete={handleDelete} currentPage={currentPage} setCurrentPage={setCurrentPage} itemsPerPage={itemsPerPage} />
         </div>
       </div>
       <MahasiswaForm isOpen={isOpen} onClose={onClose} />
 
-      <div className="relative my-6 p-4">
+      <div className="relative px-4">
         <input id="id-dropzone01" name="file-upload" type="file" className="hidden" onChange={handleFileUpload} />
         <label htmlFor="id-dropzone01" className="relative flex cursor-pointer flex-col items-center gap-4 rounded border border-dashed border-slate-300 px-3 py-6 text-center text-sm font-medium transition-colors">
           <span className="inline-flex h-12 items-center justify-center self-center rounded-full bg-slate-100/70 px-3 text-slate-400">
