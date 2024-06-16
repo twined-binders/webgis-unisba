@@ -1,4 +1,3 @@
-import Map from "../components/map/Map";
 import { collection, getDocs } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import db from "../configs/firebase-config";
@@ -7,7 +6,9 @@ import MapComponent from "../components/map/Map";
 
 export default function Home() {
   const [data, setData] = useState([]);
+  const [filteredData, setFilteredData] = useState([]);
   const [nama, setNama] = useState("");
+  const [selectedStudent, setSelectedStudent] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -16,6 +17,7 @@ export default function Home() {
         const querySnapshot = await getDocs(collection(db, "mahasiswa"));
         const fetchedData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
         setData(fetchedData);
+        setFilteredData(fetchedData); // Initially set filteredData to all data
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -23,14 +25,21 @@ export default function Home() {
 
     fetchData();
   }, []);
-  const filteredMahasiswa = data?.filter((mahasiswa) => {
-    return mahasiswa.nama.toLowerCase().includes(nama.toLowerCase());
-  });
+
+  const handleSearch = (e) => {
+    const searchTerm = e.target.value.toLowerCase();
+    setNama(searchTerm);
+
+    const filteredMahasiswa = data.filter((mahasiswa) => mahasiswa.nama.toLowerCase().includes(searchTerm));
+
+    setFilteredData(filteredMahasiswa);
+    setSelectedStudent(null); // Reset selected student when search changes
+  };
 
   return (
     <>
       <div className="px-4 relative">
-        <MapComponent data={data} />
+        <MapComponent data={data} selectedStudent={selectedStudent} />
         <div className="my-6 absolute z-100 top-0.5 left-10">
           <input
             id="id-s03"
@@ -39,7 +48,7 @@ export default function Home() {
             placeholder="Cari Mahasiswa"
             aria-label="Search content"
             value={nama}
-            onChange={(e) => setNama(e.target.value)}
+            onChange={handleSearch}
             className="peer h-10 w-80 rounded border border-slate-200 px-4 pr-12 text-sm text-slate-500 outline-none transition-all autofill:bg-white invalid:border-pink-500 invalid:text-pink-500 focus:border-sky-500 focus:outline-none invalid:focus:border-pink-500 focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400 "
           />
           <svg
@@ -63,10 +72,10 @@ export default function Home() {
               <TableColumn>NAMA</TableColumn>
             </TableHeader>
             <TableBody>
-              {filteredMahasiswa?.length > 0 ? (
+              {filteredData.length > 0 ? (
                 // Render filtered data if available
-                filteredMahasiswa.map((mahasiswa) => (
-                  <TableRow key={mahasiswa.id}>
+                filteredData.map((mahasiswa) => (
+                  <TableRow key={mahasiswa.id} onClick={() => setSelectedStudent(mahasiswa)}>
                     <TableCell>{mahasiswa.nama}</TableCell>
                   </TableRow>
                 ))

@@ -1,8 +1,8 @@
 import { Map as MapboxMap, FullscreenControl, Marker, NavigationControl, Popup } from "react-map-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useRef, useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 
-const MapComponent = ({ data }) => {
+const MapComponent = ({ data, selectedStudent }) => {
   const map = useRef();
   const mapboxApi = import.meta.env.VITE_MAPBOX_API_TOKEN;
   const [markers, setMarkers] = useState([]);
@@ -52,6 +52,28 @@ const MapComponent = ({ data }) => {
 
     fetchMarkers();
   }, [data, mapboxApi]);
+
+  useEffect(() => {
+    // Update selectedMarker when selectedStudent changes
+    if (selectedStudent) {
+      const selectedMarker = markers.find((marker) => marker.id === selectedStudent.id);
+      setSelectedMarker(selectedMarker || null);
+      console.log(selectedStudent);
+    } else {
+      setSelectedMarker(null);
+    }
+  }, [selectedStudent, markers]);
+
+  useEffect(() => {
+    // Fly to selected marker when it changes
+    if (map.current && selectedMarker) {
+      map.current.flyTo({
+        center: [selectedMarker.longitude, selectedMarker.latitude],
+        essential: true, // Animation is essential (not instant)
+      });
+    }
+    console.log(selectedMarker);
+  }, [selectedMarker]);
 
   return (
     <div>
