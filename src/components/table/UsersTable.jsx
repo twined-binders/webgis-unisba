@@ -1,47 +1,6 @@
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import db from "../../configs/firebase-config";
-import { getDocs, collection, doc, updateDoc } from "firebase/firestore";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Switch } from "@nextui-org/react";
 
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Switch, Select, SelectItem } from "@nextui-org/react";
-
-export default function UsersTable() {
-  const [users, setUsers] = useState([]);
-
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const querySnapshot = await getDocs(collection(db, "users"));
-      const usersData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
-      setUsers(usersData);
-    };
-
-    fetchUsers();
-  }, []);
-
-  const toggleApprovalStatus = async (userId, currentStatus) => {
-    const userDocRef = doc(db, "users", userId);
-    try {
-      await updateDoc(userDocRef, {
-        approved: !currentStatus,
-      });
-      setUsers((prevUsers) => prevUsers.map((user) => (user.id === userId ? { ...user, approved: !currentStatus } : user)));
-    } catch (error) {
-      console.error("Error updating approval status: ", error);
-    }
-  };
-
-  const handleRoleChange = async (userId, newRole) => {
-    const userDocRef = doc(db, "users", userId);
-    try {
-      await updateDoc(userDocRef, {
-        role: newRole,
-      });
-      setUsers((prevUsers) => prevUsers.map((user) => (user.id === userId ? { ...user, role: newRole } : user)));
-    } catch (error) {
-      console.error("Error updating role: ", error);
-    }
-  };
-
+export default function UsersTable({ users, toggleApprovalStatus, handleRoleChange }) {
   return (
     <>
       <div className="px-4">
@@ -78,11 +37,11 @@ export default function UsersTable() {
                 <TableCell>
                   {user.approved ? (
                     <div className="w-1/3 text-center px-4 py-3 text-sm border rounded border-emerald-100 bg-emerald-50 text-emerald-500" role="alert">
-                      <p>Aprroved</p>
+                      <p>Approved</p>
                     </div>
                   ) : (
                     <div className="w-2/4 text-center px-4 py-3 text-sm border rounded border-pink-100 bg-pink-50 text-pink-500" role="alert">
-                      <p>Not Aprroved</p>
+                      <p>Not Approved</p>
                     </div>
                   )}
                 </TableCell>

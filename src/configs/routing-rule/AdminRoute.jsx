@@ -35,9 +35,9 @@ const AdminRoute = ({ children }) => {
     fetchUserRole();
   }, []);
 
-  useEffect(() => {
-    console.log(loading);
-  }, [loading]);
+  // useEffect(() => {
+  //   console.log(loading);
+  // }, [loading]);
 
   if (loading) {
     return (

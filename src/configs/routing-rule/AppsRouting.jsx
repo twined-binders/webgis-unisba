@@ -4,7 +4,7 @@ import ErrorPage from "../../pages/errorPage";
 import Mahasiswa from "../../pages/Mahasiswa";
 import Dashboard from "../../pages/Dashboard";
 import SignInPage from "../../pages/SignInPage";
-import UsersTable from "../../../src/components/table/UsersTable";
+import UserManagement from "../../pages/userManagement";
 import WaitApprovalPage from "../../pages/WaitApproval";
 import ApprovedRoute from "./ApprovedRoute";
 import AdminRoute from "./AdminRoute";
@@ -41,7 +41,7 @@ const router = createBrowserRouter([
         path: "users",
         element: (
           <AdminRoute>
-            <UsersTable />
+            <UserManagement />
           </AdminRoute>
         ),
       },
