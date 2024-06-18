@@ -42,7 +42,7 @@ const MapComponent = ({ data, selectedStudent }) => {
         if (!uniqueMarkersMap.has(key)) {
           uniqueMarkersMap.set(key, { ...marker, students: [] });
         }
-        uniqueMarkersMap.get(key).students.push(marker.nama);
+        uniqueMarkersMap.get(key).students.push({ id: marker.id, nama: marker.nama });
       });
 
       const uniqueMarkersList = Array.from(uniqueMarkersMap.values());
@@ -54,26 +54,26 @@ const MapComponent = ({ data, selectedStudent }) => {
   }, [data, mapboxApi]);
 
   useEffect(() => {
-    // Update selectedMarker when selectedStudent changes
     if (selectedStudent) {
-      const selectedMarker = markers.find((marker) => marker.id === selectedStudent.id);
+      const selectedMarker = markers.find((marker) => marker.students.some((student) => student.id === selectedStudent.id));
       setSelectedMarker(selectedMarker || null);
-      console.log(selectedStudent);
     } else {
       setSelectedMarker(null);
     }
   }, [selectedStudent, markers]);
 
   useEffect(() => {
-    // Fly to selected marker when it changes
     if (map.current && selectedMarker) {
       map.current.flyTo({
         center: [selectedMarker.longitude, selectedMarker.latitude],
-        essential: true, // Animation is essential (not instant)
+        essential: true, // Animasi
+        zoom: 15,
+        speed: 0.4,
+        curve: 2,
       });
     }
-    console.log(selectedMarker);
   }, [selectedMarker]);
+  // console.log(selectedMarker);
 
   return (
     <div>
@@ -109,9 +109,9 @@ const MapComponent = ({ data, selectedStudent }) => {
             <div>
               <div className="p-2">
                 <h3 className="mb-2 text-xs font-medium text-slate-700">Mahasiswa di lokasi ini: {selectedMarker.lokasi} </h3>
-                {selectedMarker.students.map((nama, index) => (
+                {selectedMarker.students.map((student, index) => (
                   <p className="text-xs" key={index}>
-                    {nama}
+                    {student.nama}
                   </p>
                 ))}
               </div>

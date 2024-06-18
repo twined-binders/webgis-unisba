@@ -67,7 +67,7 @@ export default function Home() {
         </div>
 
         {nama && (
-          <Table className="w-80 text-left  absolute z-100 top-20 left-9" hideHeader selectionMode="single" defaultSelectedKeys={["0"]} color="primary">
+          <Table className="w-80 text-left  absolute z-100 top-20 left-9" hideHeader color="primary">
             <TableHeader>
               <TableColumn>NAMA</TableColumn>
             </TableHeader>
@@ -76,7 +76,7 @@ export default function Home() {
                 // Render filtered data if available
                 filteredData.map((mahasiswa) => (
                   <TableRow key={mahasiswa.id} onClick={() => setSelectedStudent(mahasiswa)}>
-                    <TableCell>{mahasiswa.nama}</TableCell>
+                    <TableCell className="hover:bg-sky-500 rounded-lg cursor-pointer">{mahasiswa.nama}</TableCell>
                   </TableRow>
                 ))
               ) : (
