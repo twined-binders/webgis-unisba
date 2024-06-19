@@ -90,6 +90,7 @@ const MapComponent = ({ data, selectedStudent }) => {
       >
         <FullscreenControl />
         <NavigationControl />
+        <Marker latitude={-8.098606} longitude={112.183431} />
         {markers.map((marker) => (
           <Marker
             key={`${marker.latitude}-${marker.longitude}`}

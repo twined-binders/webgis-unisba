@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import db from "../configs/firebase-config";
 import { auth } from "../configs/firebase-config";
-import { Card, CardHeader, CardBody, Image, Spinner, CardFooter } from "@nextui-org/react";
+import { Card, CardHeader, CardBody, Image, Spinner, CardFooter, Button } from "@nextui-org/react";
 
 const WaitApprovalPage = () => {
   const [userData, setUserData] = useState(null);
@@ -41,18 +41,25 @@ const WaitApprovalPage = () => {
   }
 
   return (
-    <div className="h-screen flex items-center justify-center">
+    <div className="h-screen flex flex-col gap-3 items-center justify-center">
       <Card className="py-4 ">
         <CardHeader className="pb-0 pt-2 px-4 flex-col items-start">
           <p className="text-tiny font-bold">{userData.email}</p>
           <small className="text-default-500">{userData.role}</small>
           <h4 className="font-bold text-large">{userData.approved ? <p className="text-emerald-500">Approved</p> : <p className="text-red-500">Not Approved</p>}</h4>
         </CardHeader>
-        <CardBody className="overflow-visible py-2">
-          <Image alt="Card background" className="object-cover rounded-xl " src="https://nextui.org/images/hero-card-complete.jpeg" width={270} />
+        <CardBody className="overflow-visible flex items-center">
+          <Image alt="Card background" className="object-fill rounded-xl " src="https://nextui.org/images/hero-card-complete.jpeg" width={400} />
         </CardBody>
-        <CardFooter>{userData.approved ? <small>Akun Anda telah disetujui oleh Admin</small> : <small>Akun Anda sedang menunggu persetujuan Admin</small>}</CardFooter>
+        <CardFooter className="flex justify-center">{userData.approved ? <small>Akun Anda telah disetujui oleh Admin</small> : <small>Akun Anda sedang menunggu persetujuan Admin</small>}</CardFooter>
       </Card>
+      <div className="w-1/3">
+        <a href="/" className="w-full">
+          <Button color="primary" className="w-full">
+            Kembali
+          </Button>
+        </a>
+      </div>
     </div>
   );
 };
