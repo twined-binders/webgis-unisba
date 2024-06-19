@@ -1,6 +1,7 @@
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Switch } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Switch, Tooltip } from "@nextui-org/react";
+import { DeleteIcon } from "../icons/DeleteIcon";
 
-export default function UsersTable({ users, toggleApprovalStatus, handleRoleChange }) {
+export default function UsersTable({ users, toggleApprovalStatus, handleRoleChange, handleDelete }) {
   return (
     <>
       <div className="px-4">
@@ -11,6 +12,7 @@ export default function UsersTable({ users, toggleApprovalStatus, handleRoleChan
             <TableColumn className="min-w-40">Role</TableColumn>
             <TableColumn className="min-w-48 pl-11">Status</TableColumn>
             <TableColumn>Persetujuan</TableColumn>
+            <TableColumn>Aksi</TableColumn>
           </TableHeader>
           <TableBody>
             {users.map((user, index) => (
@@ -48,6 +50,13 @@ export default function UsersTable({ users, toggleApprovalStatus, handleRoleChan
 
                 <TableCell className="px-6">
                   <Switch isSelected={user.approved} onChange={() => toggleApprovalStatus(user.id, user.approved)} color="primary" />
+                </TableCell>
+                <TableCell>
+                  <Tooltip color="danger" content="Hapus">
+                    <span className="text-lg text-danger cursor-pointer active:opacity-50" onClick={() => handleDelete(user.id)}>
+                      <DeleteIcon />
+                    </span>
+                  </Tooltip>
                 </TableCell>
               </TableRow>
             ))}

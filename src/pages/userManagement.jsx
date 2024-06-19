@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import db from "../configs/firebase-config";
-import { getDocs, collection, doc, updateDoc } from "firebase/firestore";
+import { getDocs, collection, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import UsersTable from "../components/table/UsersTable";
+import { toast } from "react-toastify";
 
 export default function UserManagement() {
   const [users, setUsers] = useState([]);
@@ -40,9 +41,19 @@ export default function UserManagement() {
     }
   };
 
+  const handleDelete = async (userId) => {
+    try {
+      const userRef = doc(db, "users", userId);
+      await deleteDoc(userRef);
+      toast.success("Berhasil Menghapus Pengguna");
+    } catch (error) {
+      toast.error("Gagal Menghapus Data", error);
+    }
+  };
+
   return (
     <>
-      <UsersTable users={users} toggleApprovalStatus={toggleApprovalStatus} handleRoleChange={handleRoleChange} />
+      <UsersTable users={users} toggleApprovalStatus={toggleApprovalStatus} handleRoleChange={handleRoleChange} handleDelete={handleDelete} />
     </>
   );
 }
