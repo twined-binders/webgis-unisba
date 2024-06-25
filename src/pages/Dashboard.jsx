@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import db from "../configs/firebase-config"; // Import your Firestore instance
 import { getDocs, collection } from "firebase/firestore";
-import { Calendar, Card, CardHeader, CardBody, Spinner, Button, Link } from "@nextui-org/react";
+import { Calendar, Card, CardHeader, CardBody, Spinner, Button } from "@nextui-org/react";
 import { today, getLocalTimeZone } from "@internationalized/date";
 import { Wave } from "../components/icons/Wave";
 import { Wave2 } from "../components/icons/Wave2";
 import { Wave3 } from "../components/icons/Wave3";
 import { UserIcon } from "../components/icons/UserIcon";
+import { Link } from "react-router-dom";
 
 function Dashboard() {
   const [mostFrequentProdi, setMostFrequentProdi] = useState("");
+  const [mostFrequentProdiCount, setMostFrequentProdiCount] = useState(0);
   const [mostFewestProdi, setMostFewestProdi] = useState("");
+  const [mostFewestProdiCount, setMostFewestProdiCount] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState([]);
 
@@ -19,7 +22,10 @@ function Dashboard() {
       try {
         // Fetch all documents from Firestore collection
         const querySnapshot = await getDocs(collection(db, "mahasiswa"));
-        const documents = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+        const documents = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
 
         setData(documents);
 
@@ -31,23 +37,25 @@ function Dashboard() {
           }
         });
 
-        let maxCountProdi = 0;
-        let minCountProdi = 0;
-        let mostFewestProdiValue = "";
+        let maxCount = -1;
+        let minCount = Infinity;
         let mostFrequentProdiValue = "";
+        let mostFewestProdiValue = "";
         Object.entries(prodiCounts).forEach(([value, count]) => {
-          if (count > maxCountProdi) {
-            maxCountProdi = count;
+          if (count > maxCount) {
+            maxCount = count;
             mostFrequentProdiValue = value;
           }
-          if (count < maxCountProdi) {
-            minCountProdi = count;
+          if (count < minCount) {
+            minCount = count;
             mostFewestProdiValue = value;
           }
         });
 
         setMostFrequentProdi(mostFrequentProdiValue);
+        setMostFrequentProdiCount(maxCount);
         setMostFewestProdi(mostFewestProdiValue);
+        setMostFewestProdiCount(minCount);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -56,13 +64,13 @@ function Dashboard() {
     fetchData();
   }, []);
 
-  if (isLoading) {
-    return (
-      <div className="text-center">
-        <Spinner label="Loading..." />
-      </div>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <div className="text-center">
+  //       <Spinner label="Loading..." />
+  //     </div>
+  //   );
+  // }
 
   return (
     <>
@@ -86,7 +94,9 @@ function Dashboard() {
                   <p className="text-default-500 font-semibold">
                     Prodi dengan Mahasiswa <br></br>tersedikit
                   </p>
-                  <h4 className="font-bold text-large">{mostFewestProdi}</h4>
+                  <h4 className="font-bold text-large">
+                    {mostFewestProdi} : {mostFewestProdiCount}
+                  </h4>
                 </CardHeader>
                 <CardBody className="overflow-visible pt-2 pb-0 px-0">
                   <Wave2 />
@@ -99,7 +109,9 @@ function Dashboard() {
                   <p className="text-default-500 font-semibold">
                     Prodi dengan Mahasiswa <br></br>terbanyak
                   </p>
-                  <h4 className="font-bold text-large">{mostFrequentProdi}</h4>
+                  <h4 className="font-bold text-large">
+                    {mostFrequentProdi} : {mostFrequentProdiCount}
+                  </h4>
                 </CardHeader>
                 <CardBody className="overflow-visible pt-2 pb-0 px-0">
                   <Wave3 />
@@ -113,7 +125,7 @@ function Dashboard() {
             <Calendar aria-label="Date (Read Only)" visibleMonths={2} value={today(getLocalTimeZone())} isReadOnly color="primary" />
           </div>
           <div>
-            <Link href="/mahasiswa" className="w-full">
+            <Link to="/mahasiswa" className="w-full">
               <Button color="primary" startContent={<UserIcon />} className="w-full">
                 Data Mahasiswa
               </Button>

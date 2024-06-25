@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 import { Logo } from "../brand/Logo";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { useLocation } from "react-router-dom";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import db from "../../configs/firebase-config";
+import { Link } from "react-router-dom";
 
 export default function MainNavbar() {
   const location = useLocation();
@@ -62,15 +63,15 @@ export default function MainNavbar() {
         </NavbarBrand>
         <NavbarContent className="flex gap-4" justify="center">
           <NavbarItem isActive={location.pathname === "/"} className="sm:w-16 md:w-auto">
-            <Link href="/" aria-current="page">
+            <Link to="/" aria-current="page">
               Home
             </Link>
           </NavbarItem>
           <NavbarItem isActive={location.pathname === "/dashboard"} className="sm:w-16 md:w-auto">
-            <Link href="/dashboard">Dashboard</Link>
+            <Link to="/dashboard">Dashboard</Link>
           </NavbarItem>
           <NavbarItem isActive={location.pathname === "/mahasiswa"} className="sm:w-16 md:w-auto">
-            <Link href="/mahasiswa">Mahasiswa</Link>
+            <Link to="/mahasiswa">Mahasiswa</Link>
           </NavbarItem>
         </NavbarContent>
         <NavbarContent className="flex gap-4" justify="center">
