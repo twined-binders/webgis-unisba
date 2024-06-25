@@ -85,7 +85,7 @@ export default function MainNavbar() {
                   <DropdownMenu aria-label="Static Actions">
                     {role === "admin" && (
                       <DropdownItem key="users">
-                        <Link href="/users">Manage Users</Link>
+                        <Link to="/users">Manage Users</Link>
                       </DropdownItem>
                     )}
                     <DropdownItem key="delete" className="text-danger" color="danger" onClick={handleLogout}>
@@ -95,7 +95,7 @@ export default function MainNavbar() {
                 </Dropdown>
               </div>
             ) : (
-              <Link href="/login">
+              <Link to="/login">
                 <Button>Login</Button>
               </Link>
             )}
