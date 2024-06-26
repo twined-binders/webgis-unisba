@@ -126,7 +126,7 @@ function Dashboard() {
           </div>
           <div>
             <Link to="/mahasiswa" className="w-full">
-              <Button color="primary" startContent={<UserIcon />} className="w-full">
+              <Button type="button" color="primary" startContent={<UserIcon />} className="w-full">
                 Data Mahasiswa
               </Button>
             </Link>
