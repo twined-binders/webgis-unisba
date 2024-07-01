@@ -20,7 +20,7 @@ const SignInRule = ({ children }) => {
         const userRef = query(collection(db, "users"), where("email", "==", user.email));
         const snapshot = await getDocs(userRef);
 
-        if (!snapshot.empty) {
+        if (snapshot) {
           setIsEmailVerified(true);
         } else {
           setIsEmailVerified(false);
