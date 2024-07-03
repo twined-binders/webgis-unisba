@@ -58,7 +58,7 @@ export default function MainNavbar() {
         <NavbarBrand onClick={handleClickHome} className="hidden sm:block grow-0">
           <div className="cursor-pointer flex flex-row justify-center items-center">
             <Logo />
-            <p className="font-bold text-inherit">WebGis</p>
+            <p className="font-bold text-inherit">GeoUnisba</p>
           </div>
         </NavbarBrand>
         <NavbarContent className="flex gap-4" justify="center">
