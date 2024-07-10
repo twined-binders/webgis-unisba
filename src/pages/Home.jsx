@@ -13,11 +13,11 @@ export default function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch data from the "mahasiswa" collection
+        // Fetch data dari "mahasiswa"
         const querySnapshot = await getDocs(collection(db, "mahasiswa"));
         const fetchedData = querySnapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
         setData(fetchedData);
-        setFilteredData(fetchedData); // Initially set filteredData to all data
+        setFilteredData(fetchedData);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -33,7 +33,7 @@ export default function Home() {
     const filteredMahasiswa = data.filter((mahasiswa) => mahasiswa.nama.toLowerCase().includes(searchTerm));
 
     setFilteredData(filteredMahasiswa);
-    setSelectedStudent(null); // Reset selected student when search changes
+    setSelectedStudent(null); // Reset
   };
 
   return (
@@ -80,7 +80,7 @@ export default function Home() {
                   </TableRow>
                 ))
               ) : (
-                // Render empty result cell
+                // Render empty
                 <TableRow>
                   <TableCell>No results found</TableCell>
                 </TableRow>

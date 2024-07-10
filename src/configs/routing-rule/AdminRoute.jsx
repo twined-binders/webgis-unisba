@@ -22,10 +22,10 @@ const AdminRoute = ({ children }) => {
             const userData = querySnapshot.docs[0].data();
             setIsAdmin(userData.role === "admin");
           } else {
-            console.log("No user data found for the current user");
+            console.log("Data user tidak ditemukan");
           }
         } catch (error) {
-          console.error("Error fetching user data:", error);
+          console.error("Gagal mendapatkan data:", error);
         }
       }
 

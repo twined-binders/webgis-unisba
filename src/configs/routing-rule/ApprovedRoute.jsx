@@ -24,10 +24,10 @@ const ApprovedRoute = ({ children }) => {
             const userData = querySnapshot.docs[0].data();
             setApproved(userData.approved);
           } else {
-            console.log("No user data found for the current user");
+            console.log("Data user tidak ditemukan");
           }
         } catch (error) {
-          console.error("Error fetching user data:", error);
+          console.error("Gagal mendapatkan data:", error);
         }
       }
 
