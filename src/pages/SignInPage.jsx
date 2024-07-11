@@ -54,7 +54,7 @@ export default function SignInPage() {
         <Card className="max-w-full w-1/3 h-[480px] p-4 flex">
           <CardHeader className="justify-center">
             <Logo />
-            <p className="font-semibold text-xl">WebGis</p>
+            <p className="font-semibold text-xl">GeoUnisba</p>
           </CardHeader>
           <CardBody className="overflow-hidden">
             <Tabs fullWidth size="md" aria-label="Tabs form" selectedKey={selected} onSelectionChange={setSelected}>
