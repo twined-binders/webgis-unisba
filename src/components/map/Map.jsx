@@ -2,7 +2,7 @@ import { Map as MapboxMap, FullscreenControl, Marker, NavigationControl, Popup }
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useEffect, useState, useRef } from "react";
 
-const MapComponent = ({ data, selectedStudent }) => {
+const MapComponent = ({ data, selectedStudent, selectedResult }) => {
   const map = useRef();
   const mapboxApi = import.meta.env.VITE_MAPBOX_API_TOKEN;
   const [markers, setMarkers] = useState([]);
@@ -34,7 +34,7 @@ const MapComponent = ({ data, selectedStudent }) => {
         })
       );
 
-      const filteredMarkers = markers.filter((marker) => marker); // Filter null & undefined
+      const filteredMarkers = markers.filter((marker) => marker);
 
       const uniqueMarkersMap = new Map();
       filteredMarkers.forEach((marker) => {
@@ -66,14 +66,25 @@ const MapComponent = ({ data, selectedStudent }) => {
     if (map.current && selectedMarker) {
       map.current.flyTo({
         center: [selectedMarker.longitude, selectedMarker.latitude],
-        essential: true, // Animasi
+        essential: true,
         zoom: 15,
         speed: 0.4,
         curve: 2,
       });
     }
   }, [selectedMarker]);
-  // console.log(selectedMarker);
+
+  useEffect(() => {
+    if (map.current && selectedResult) {
+      map.current.flyTo({
+        center: [selectedResult.center[0], selectedResult.center[1]],
+        essential: true,
+        zoom: 15,
+        speed: 0.4,
+        curve: 2,
+      });
+    }
+  }, [selectedResult]);
 
   return (
     <div>
@@ -100,7 +111,7 @@ const MapComponent = ({ data, selectedStudent }) => {
             color="red"
             scale={0.8}
             onClick={(e) => {
-              e.originalEvent.stopPropagation(); // Prevent click event from propagating to the map
+              e.originalEvent.stopPropagation();
               setSelectedMarker(marker);
             }}
           />
@@ -109,7 +120,7 @@ const MapComponent = ({ data, selectedStudent }) => {
           <Popup latitude={selectedMarker.latitude} longitude={selectedMarker.longitude} onClose={() => setSelectedMarker(null)} closeOnClick={false} anchor="top">
             <div>
               <div className="p-2">
-                <h3 className="mb-2 text-xs font-medium text-slate-700">Mahasiswa di lokasi ini: {selectedMarker.lokasi} </h3>
+                <h3 className="mb-2 text-xs font-medium text-slate-700">Mahasiswa di lokasi ini: {selectedMarker.lokasi}</h3>
                 {selectedMarker.students.map((student, index) => (
                   <p className="text-xs" key={index}>
                     {student.nama}
@@ -118,6 +129,21 @@ const MapComponent = ({ data, selectedStudent }) => {
               </div>
             </div>
           </Popup>
+        )}
+        {selectedResult && (
+          <Marker
+            latitude={selectedResult.center[1]}
+            longitude={selectedResult.center[0]}
+            onClick={(e) => {
+              e.originalEvent.stopPropagation();
+              setSelectedMarker({
+                latitude: selectedResult.center[1],
+                longitude: selectedResult.center[0],
+                lokasi: selectedResult.place_name,
+                students: [],
+              });
+            }}
+          />
         )}
       </MapboxMap>
     </div>

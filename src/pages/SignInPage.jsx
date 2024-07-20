@@ -58,36 +58,36 @@ export default function SignInPage() {
           </CardHeader>
           <CardBody className="overflow-hidden">
             <Tabs fullWidth size="md" aria-label="Tabs form" selectedKey={selected} onSelectionChange={setSelected}>
-              <Tab key="login" title="Login">
+              <Tab key="login" title="Masuk">
                 <form className="flex flex-col gap-4" onSubmit={onLogin}>
-                  <Input isRequired label="Email" placeholder="Enter your email" type="email" onChange={(e) => setEmail(e.target.value)} />
-                  <Input isRequired label="Password" placeholder="Enter your password" type="password" onChange={(e) => setPassword(e.target.value)} />
+                  <Input isRequired label="Email" placeholder="Masukkan email Anda" type="email" onChange={(e) => setEmail(e.target.value)} />
+                  <Input isRequired label="Password" placeholder="Masukkan password Anda" type="password" onChange={(e) => setPassword(e.target.value)} />
                   <p className="text-center text-small">
-                    Need to create an account?{" "}
+                    Perlu membuat sebuah akun?{" "}
                     <Link size="sm" onPress={() => setSelected("sign-up")}>
-                      Sign up
+                      Registrasi
                     </Link>
                   </p>
                   <div className="flex gap-2 justify-end">
                     <Button fullWidth color="primary" type="submit">
-                      Login
+                      Masuk
                     </Button>
                   </div>
                 </form>
               </Tab>
-              <Tab key="sign-up" title="Sign up">
+              <Tab key="sign-up" title="Registrasi">
                 <form className="flex flex-col gap-4 h-[300px]" onSubmit={onSignUp}>
-                  <Input isRequired label="Email" placeholder="Enter your email" type="email" onChange={(e) => setEmail(e.target.value)} />
-                  <Input isRequired label="Password" placeholder="Enter your password" type="password" onChange={(e) => setPassword(e.target.value)} />
+                  <Input isRequired label="Email" placeholder="Masukkan email Anda" type="email" onChange={(e) => setEmail(e.target.value)} />
+                  <Input isRequired label="Password" placeholder="Masukkan password Anda" type="password" onChange={(e) => setPassword(e.target.value)} />
                   <p className="text-center text-small">
-                    Already have an account?{" "}
+                    Sudah mempunyai akun?{" "}
                     <Link size="sm" onPress={() => setSelected("login")}>
-                      Login
+                      Masuk
                     </Link>
                   </p>
                   <div className="flex gap-2 justify-end">
                     <Button fullWidth color="primary" type="submit">
-                      Sign up
+                      Registrasi
                     </Button>
                   </div>
                 </form>

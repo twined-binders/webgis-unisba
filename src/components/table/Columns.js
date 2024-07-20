@@ -14,5 +14,6 @@ export const COLUMNS = [
   { name: "Kecamatan", uid: "kecamatan" },
   { name: "Kota", uid: "kota" },
   { name: "Provinsi", uid: "provinsi" },
+  { name: "Waktu Ditambahkan", uid: "createdTime" },
   { name: "Aksi", uid: "aksi" },
 ];

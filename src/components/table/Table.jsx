@@ -6,6 +6,7 @@ import UpdateModalComponent from "../modal/updateModal";
 import React from "react";
 import { ChevronDownIcon } from "../icons/ChevronDownIcon";
 import { COLUMNS } from "./Columns";
+import { Timestamp } from "firebase/firestore";
 
 const INITIAL_VISIBLE_COLUMNS = ["no", "nama", "nim", "prodi", "aksi"];
 
@@ -32,11 +33,10 @@ export default function TableComponent({ data, handleDelete, currentPage, setCur
   const handleSelectionChange = useCallback((keys) => {
     setVisibleColumns(new Set(keys));
   }, []);
-  console.log(currentPage);
 
   return (
     <>
-      <div className="py-6">
+      <div className="py-2">
         <Table
           color="primary"
           selectionMode="single"
@@ -51,7 +51,7 @@ export default function TableComponent({ data, handleDelete, currentPage, setCur
                 <Dropdown>
                   <DropdownTrigger>
                     <Button endContent={<ChevronDownIcon />} variant="flat">
-                      Columns
+                      Kolom
                     </Button>
                   </DropdownTrigger>
                   <DropdownMenu aria-label="Table Columns" disallowEmptySelection closeOnSelect={false} selectionMode="multiple" selectedKeys={visibleColumns} onSelectionChange={handleSelectionChange}>
@@ -106,6 +106,9 @@ export default function TableComponent({ data, handleDelete, currentPage, setCur
                       return <TableCell key="kota">{mahasiswa.kota}</TableCell>;
                     case "provinsi":
                       return <TableCell key="provinsi">{mahasiswa.provinsi}</TableCell>;
+                    case "createdTime":
+                      const createdTime = mahasiswa.createdTime instanceof Timestamp ? mahasiswa.createdTime.toDate().toLocaleString() : mahasiswa.createdTime;
+                      return <TableCell key="createdTime">{createdTime}</TableCell>;
                     case "aksi":
                       return (
                         <TableCell key="aksi">

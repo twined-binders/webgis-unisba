@@ -9,7 +9,7 @@ export default function UsersTable({ users, toggleApprovalStatus, handleRoleChan
           <TableHeader>
             <TableColumn>No</TableColumn>
             <TableColumn>Email</TableColumn>
-            <TableColumn className="min-w-40">Role</TableColumn>
+            <TableColumn className="min-w-40">Peran</TableColumn>
             <TableColumn className="min-w-48 pl-11">Status</TableColumn>
             <TableColumn>Persetujuan</TableColumn>
             <TableColumn>Aksi</TableColumn>
@@ -39,11 +39,11 @@ export default function UsersTable({ users, toggleApprovalStatus, handleRoleChan
                 <TableCell>
                   {user.approved ? (
                     <div className="w-1/3 text-center px-4 py-3 text-sm border rounded border-emerald-100 bg-emerald-50 text-emerald-500" role="alert">
-                      <p>Approved</p>
+                      <p>Disetujui</p>
                     </div>
                   ) : (
                     <div className="w-2/4 text-center px-4 py-3 text-sm border rounded border-pink-100 bg-pink-50 text-pink-500" role="alert">
-                      <p>Not Approved</p>
+                      <p>Tidak Disetujui</p>
                     </div>
                   )}
                 </TableCell>

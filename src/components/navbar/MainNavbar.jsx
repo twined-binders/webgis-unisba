@@ -85,18 +85,18 @@ export default function MainNavbar() {
                   <DropdownMenu aria-label="Static Actions">
                     {role === "admin" && (
                       <DropdownItem key="users">
-                        <Link to="/users">Manage Users</Link>
+                        <Link to="/users">Manajemen Pengguna</Link>
                       </DropdownItem>
                     )}
                     <DropdownItem key="delete" className="text-danger" color="danger" onClick={handleLogout}>
-                      Logout
+                      Keluar
                     </DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
               </div>
             ) : (
               <Link to="/login">
-                <Button>Login</Button>
+                <Button>Masuk</Button>
               </Link>
             )}
           </NavbarItem>

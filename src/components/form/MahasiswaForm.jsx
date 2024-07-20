@@ -1,5 +1,5 @@
 import db from "../../configs/firebase-config";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -24,18 +24,68 @@ export default function MahasiswaForm({ isOpen, onClose }) {
   // const [latitude, setLatitude] = useState("");
   // const [longitude, setLongitude] = useState("");
 
-  // const timestamp = new Date().getTime();
-
+  const timestamp = serverTimestamp();
   const nimNumber = parseInt(nim); // Convert nim to a number
   // const latitudeNumber = parseFloat(latitude); // Convert latitude to a number
   // const longitudeNumber = parseFloat(longitude);
 
+  const resetFormFields = () => {
+    setNama("");
+    setNim("");
+    setFakultas("");
+    setProdi("");
+    setEmail("");
+    setKelas("");
+    setAlamat("");
+    setDesa("");
+    setDusun("");
+    setKecamatan("");
+    setKodePos("");
+    setKota("");
+    setProvinsi("");
+    setRt("");
+    setRw("");
+    // setLatitude("");
+    // setLongitude("");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // Perform validation
+    if (!nama || !nim || !fakultas || !prodi || !email || !kelas || !alamat || !rt || !rw || !dusun || !kodePos || !desa || !kecamatan || !kota || !provinsi) {
+      toast.error("Semua field harus diisi!", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailPattern.test(email)) {
+      toast.error("Email tidak valid!", {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+      return;
+    }
+
     try {
       await addDoc(collection(db, "mahasiswa"), {
         nama: nama,
-        nim: nimNumber,
+        nim: nim,
         fakultas: fakultas,
         prodi: prodi,
         email: email,
@@ -49,8 +99,9 @@ export default function MahasiswaForm({ isOpen, onClose }) {
         kecamatan: kecamatan,
         kota: kota,
         provinsi: provinsi,
-        // latitude: latitudeNumber,
-        // longitude: longitudeNumber,
+        createdTime: timestamp,
+        // latitude: latitude,
+        // longitude: longitude,
       });
       toast.success("Berhasil menambah data!", {
         position: "top-center",
@@ -63,23 +114,7 @@ export default function MahasiswaForm({ isOpen, onClose }) {
         theme: "light",
       });
       onClose();
-      setNama("");
-      setNim("");
-      setFakultas("");
-      setProdi("");
-      setEmail("");
-      setKelas("");
-      setAlamat("");
-      setDesa("");
-      setDusun("");
-      setKecamatan("");
-      setKodePos("");
-      setKota("");
-      setProvinsi("");
-      setRt("");
-      setRw("");
-      // setLatitude("");
-      // setLongitude("");
+      resetFormFields();
     } catch (err) {
       console.error("Error adding document: ", err);
       if (err.code === "permission-denied") {
@@ -91,6 +126,12 @@ export default function MahasiswaForm({ isOpen, onClose }) {
       }
     }
   };
+
+  const handleClose = () => {
+    resetFormFields();
+    onClose();
+  };
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} className="w-full" size="5xl">
       <ModalContent className="w-[900px]">
@@ -517,11 +558,11 @@ export default function MahasiswaForm({ isOpen, onClose }) {
           </div>
         </ModalBody>
         <ModalFooter>
-          <Button color="default" variant="flat" onClick={onClose}>
-            Close
+          <Button color="default" variant="flat" onClick={handleClose}>
+            Tutup
           </Button>
           <Button type="submit" color="primary" variant="flat" onClick={handleSubmit}>
-            Submit
+            Tambah
           </Button>
         </ModalFooter>
       </ModalContent>

@@ -1,5 +1,5 @@
 import React from "react";
-import { collection, getDocs, doc, deleteDoc, onSnapshot, orderBy, query } from "firebase/firestore";
+import { collection, getDocs, doc, deleteDoc, onSnapshot, orderBy, query, serverTimestamp } from "firebase/firestore";
 import { useState, useEffect } from "react";
 import db from "../configs/firebase-config";
 import MahasiswaForm from "../components/form/MahasiswaForm";
@@ -20,6 +20,8 @@ export default function Mahasiswa() {
   const [fileName, setFileName] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(5);
+  const [sortField, setSorfField] = useState("nama");
+  const [sortDirection, setSortDirection] = useState("asc");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -28,7 +30,7 @@ export default function Mahasiswa() {
         const mahasiswaRef = collection(db, "mahasiswa");
 
         // query untuk order data
-        const q = query(mahasiswaRef, orderBy("__name__", "desc"));
+        const q = query(mahasiswaRef);
 
         // fetch dokumen/data
         const querySnapshot = await getDocs(q);
@@ -42,23 +44,26 @@ export default function Mahasiswa() {
     fetchData();
 
     // query untuk real-time update data ke data terbaru
-    const q = query(collection(db, "mahasiswa"), orderBy("__name__", "desc"));
+    const q = query(collection(db, "mahasiswa"), orderBy(sortField, sortDirection));
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const updatedData = snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
       setData(updatedData);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [sortField, sortDirection]);
 
   const handleDelete = async (id) => {
-    try {
-      const mahasiswaData = doc(db, "mahasiswa", id);
-      await deleteDoc(mahasiswaData);
-      toast.success("Data berhasil dihapus!");
-    } catch (error) {
-      toast.error("Gagal menghapus data!");
-      console.error("Error deleting data:", error);
+    const confirmation = window.confirm("Apakah Anda yakin ingin menghapus data ini?");
+    if (confirmation) {
+      try {
+        const mahasiswaData = doc(db, "mahasiswa", id);
+        await deleteDoc(mahasiswaData);
+        toast.success("Data berhasil dihapus!");
+      } catch (error) {
+        toast.error("Gagal menghapus data!");
+        console.error("Error deleting data:", error);
+      }
     }
   };
 
@@ -81,6 +86,15 @@ export default function Mahasiswa() {
     setItemsPerPage(Number(e.target.value));
     setCurrentPage(1);
   }, []);
+
+  const sortFieldChange = React.useCallback((e) => {
+    setSorfField(e.target.value);
+  }, []);
+
+  const sortDirectionChange = React.useCallback((e) => {
+    setSortDirection(e.target.value);
+  }, []);
+  console.log(sortField);
 
   //Untuk input data dari file excell
   const handleFileUpload = (event) => {
@@ -110,7 +124,11 @@ export default function Mahasiswa() {
 
     input.forEach((item) => {
       const docRef = doc(collectionRef);
-      batch.set(docRef, item);
+      const dataWithTimestamp = {
+        ...item,
+        createdTime: serverTimestamp(), // Add the current timestamp
+      };
+      batch.set(docRef, dataWithTimestamp);
     });
 
     try {
@@ -135,7 +153,7 @@ export default function Mahasiswa() {
 
   return (
     <>
-      <div className="top-content flex px-4 justify-between mb-4 mt-6 items-center">
+      <div className="top-content flex px-4 justify-between mb-1 mt-6 items-center">
         <div className="flex justify-between gap-4 items-center">
           <div className="relative flex-1 w-72">
             <input
@@ -167,17 +185,101 @@ export default function Mahasiswa() {
               {filteredMahasiswa.length}
             </span>
           </div>
+          <div className="flex gap-2">
+            <div className="relative my-6 md:w-44">
+              <select
+                id="sortfield"
+                name="sortfield"
+                required
+                value={sortField}
+                onChange={sortFieldChange}
+                className="peer relative h-10 w-full appearance-none rounded border border-slate-200 bg-white px-4 text-sm text-slate-500 outline-none transition-all autofill:bg-white focus:border-sky-500 focus-visible:outline-none focus:focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
+              >
+                <option value="" disabled></option>
+                <option value="nama">Nama</option>
+                <option value="nim">Nim</option>
+                <option value="createdTime">Waktu ditambahkan</option>
+              </select>
+              <label
+                htmlFor="sortfield"
+                className="pointer-events-none absolute top-2.5 left-2 z-[1] px-2 text-sm text-slate-400 transition-all before:absolute before:top-0 before:left-0 before:z-[-1] before:block before:h-full before:w-full before:bg-white before:transition-all peer-required:after:text-pink-500 peer-required:after:content-['\00a0*'] peer-valid:-top-2 peer-valid:text-xs peer-focus:-top-2 peer-focus:text-xs peer-focus:text-sky-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400 peer-disabled:before:bg-transparent"
+              >
+                Urutkan berdasarkan
+              </label>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="pointer-events-none absolute top-2.5 right-2 h-5 w-5 fill-slate-400 transition-all peer-focus:fill-sky-500 peer-disabled:cursor-not-allowed"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-labelledby="title-04 description-04"
+                role="graphics-symbol"
+              >
+                <title id="title-04">Arrow Icon</title>
+                <desc id="description-04">Arrow icon of the select list.</desc>
+                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <div className="relative my-6 md:w-28">
+              <select
+                id="sortdirection"
+                name="sortdirection"
+                required
+                value={sortDirection}
+                onChange={sortDirectionChange}
+                className="peer relative h-10 w-full appearance-none rounded border border-slate-200 bg-white px-4 text-sm text-slate-500 outline-none transition-all autofill:bg-white focus:border-sky-500 focus-visible:outline-none focus:focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
+              >
+                <option value="" disabled></option>
+                <option value="asc">Naik</option>
+                <option value="desc">Menurun</option>
+              </select>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="pointer-events-none absolute top-2.5 right-2 h-5 w-5 fill-slate-400 transition-all peer-focus:fill-sky-500 peer-disabled:cursor-not-allowed"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-labelledby="title-04 description-04"
+                role="graphics-symbol"
+              >
+                <title id="title-04">Arrow Icon</title>
+                <desc id="description-04">Arrow icon of the select list.</desc>
+                <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+              </svg>
+            </div>
+          </div>
         </div>
         <div className="flex items-center gap-4">
-          <div>
-            <label className="flex items-center text-default-400 text-small">
-              Data per Halaman:
-              <select className="bg-transparent outline-none text-default-400 text-small" onChange={onRowsPerPageChange}>
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="15">15</option>
-              </select>
+          <div className="relative my-6 md:w-36">
+            <select
+              id="itemsperpage"
+              name="itemsperpage"
+              required
+              value={itemsPerPage}
+              onChange={onRowsPerPageChange}
+              className="peer relative h-10 w-full appearance-none rounded border border-slate-200 bg-white px-4 text-sm text-slate-500 outline-none transition-all autofill:bg-white focus:border-sky-500 focus-visible:outline-none focus:focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-slate-50 disabled:text-slate-400"
+            >
+              <option value="" disabled></option>
+              <option value="5">5</option>
+              <option value="10">10</option>
+              <option value="15">15</option>
+            </select>
+            <label
+              htmlFor="itemsperpage"
+              className="pointer-events-none absolute top-2.5 left-2 z-[1] px-2 text-sm text-slate-400 transition-all before:absolute before:top-0 before:left-0 before:z-[-1] before:block before:h-full before:w-full before:bg-white before:transition-all peer-required:after:text-pink-500 peer-required:after:content-['\00a0*'] peer-valid:-top-2 peer-valid:text-xs peer-focus:-top-2 peer-focus:text-xs peer-focus:text-sky-500 peer-disabled:cursor-not-allowed peer-disabled:text-slate-400 peer-disabled:before:bg-transparent"
+            >
+              Data perhalaman
             </label>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="pointer-events-none absolute top-2.5 right-2 h-5 w-5 fill-slate-400 transition-all peer-focus:fill-sky-500 peer-disabled:cursor-not-allowed"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              aria-labelledby="title-04 description-04"
+              role="graphics-symbol"
+            >
+              <title id="title-04">Arrow Icon</title>
+              <desc id="description-04">Arrow icon of the select list.</desc>
+              <path fillRule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clipRule="evenodd" />
+            </svg>
           </div>
           <div className="add">
             <Button endContent={<PlusIcon />} color="primary" onPress={onOpen}>
@@ -202,15 +304,15 @@ export default function Mahasiswa() {
             </svg>
           </span>
           <span className="text-slate-500">
-            Drag & drop or
-            <span className="text-emerald-500"> upload a file</span>
+            Tarik dan lepas
+            <span className="text-emerald-500"> atau upload sebuah file</span>
           </span>
         </label>
         {fileName && <div className="mt-4 text-center text-slate-500">Selected file: {fileName}</div>}
         {showSubmit && (
           <div className="mt-4 text-center">
             <Button onClick={performBatchWrite} color="primary">
-              Submit
+              Tambah
             </Button>
           </div>
         )}
