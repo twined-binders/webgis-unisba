@@ -40,7 +40,7 @@ export default function Home() {
       try {
         const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(searchTerm)}.json?access_token=${import.meta.env.VITE_MAPBOX_API_TOKEN}`);
         const data = await response.json();
-        console.log(data);
+
         setMapResults(data.features || []);
       } catch (error) {
         console.error("Error fetching geocoding data:", error);

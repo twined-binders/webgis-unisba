@@ -120,7 +120,7 @@ const MapComponent = ({ data, selectedStudent, selectedResult }) => {
           <Popup latitude={selectedMarker.latitude} longitude={selectedMarker.longitude} onClose={() => setSelectedMarker(null)} closeOnClick={false} anchor="top">
             <div>
               <div className="p-2">
-                <h3 className="mb-2 text-xs font-medium text-slate-700">Mahasiswa di lokasi ini: {selectedMarker.lokasi}</h3>
+                <h3 className="mb-2 text-xs font-medium text-slate-700">Lokasi: {selectedMarker.lokasi}</h3>
                 {selectedMarker.students.map((student, index) => (
                   <p className="text-xs" key={index}>
                     {student.nama}
