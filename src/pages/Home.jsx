@@ -40,9 +40,11 @@ export default function Home() {
       try {
         const response = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(searchTerm)}.json?access_token=${import.meta.env.VITE_MAPBOX_API_TOKEN}`);
         const data = await response.json();
-        setMapResults(data.features);
+        console.log(data);
+        setMapResults(data.features || []);
       } catch (error) {
         console.error("Error fetching geocoding data:", error);
+        setMapResults([]);
       }
     }
   };
@@ -83,10 +85,10 @@ export default function Home() {
           </div>
           <div className="">
             <div className="flex items-center">
-              <button onClick={() => setIsStudentSearch(true)} className={`mr-2 ${isStudentSearch ? "bg-sky-500 text-white" : "bg-sky-200 text-black"} px-4 py-2 rounded`}>
+              <button onClick={() => setIsStudentSearch(true)} className={`mr-2 ${isStudentSearch ? "bg-sky-500 text-white" : "bg-sky-100 text-black"} px-4 py-2 rounded`}>
                 Mahasiswa
               </button>
-              <button onClick={() => setIsStudentSearch(false)} className={`${!isStudentSearch ? "bg-sky-500 text-white" : "bg-sky-200 text-black"} px-4 py-2 rounded`}>
+              <button onClick={() => setIsStudentSearch(false)} className={`${!isStudentSearch ? "bg-sky-500 text-white" : "bg-sky-100 text-black"} px-4 py-2 rounded`}>
                 Lokasi
               </button>
             </div>
