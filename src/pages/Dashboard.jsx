@@ -142,16 +142,25 @@ function Dashboard() {
 
   const chartOptions = {
     indexAxis: "y",
-    aspectRatio: 1.8,
+    responsive: true,
     maintainAspectRatio: false,
     scales: {
       x: {
         beginAtZero: true,
-        title: {
-          display: false,
-        },
       },
     },
+    plugins: {
+      tooltip: {
+        enabled: true,
+      },
+      legend: {
+        display: false, // Hide legend if it's not needed to save space
+      },
+    },
+  };
+
+  const totalKeys = (counts) => {
+    return Object.keys(counts).length;
   };
 
   useEffect(() => {
@@ -343,7 +352,7 @@ function Dashboard() {
           <div>
             <div className={`px-6 py-4 ${activeTab === "1" ? "" : "hidden"}`} id="tab-panel-1a" aria-hidden="false" role="tabpanel" aria-labelledby="tab-label-1a" tabIndex="-1">
               <div className="w-full">
-                <h4 className="font-bold text-large">Jumlah Mahasiswa per Prodi</h4>
+                <h4 className="font-bold text-large">Jumlah Persebaran Mahasiswa: {totalKeys(prodiCounts)}</h4>
                 <div className="w-full max-h-[800px] overflow-y-auto">
                   <SortingButtons setSortedCounts={setSortedProdiCounts} counts={prodiCounts} />
                   <Bar ref={prodiChartRef} data={generateChartData(sortedProdiCounts)} options={chartOptions} />
@@ -352,7 +361,7 @@ function Dashboard() {
             </div>
             <div className={`px-6 py-4 ${activeTab === "2" ? "" : "hidden"}`} id="tab-panel-2a" aria-hidden="true" role="tabpanel" aria-labelledby="tab-label-2a" tabIndex="-1">
               <div className="w-full max-h-[4000px] ">
-                <h4 className="font-bold text-large">Jumlah Mahasiswa per Desa</h4>
+                <h4 className="font-bold text-large">Jumlah Persebaran Mahasiswa: {totalKeys(desaCounts)}</h4>
                 <div className="w-full max-h-[4000px] overflow-y-auto">
                   <SortingButtons setSortedCounts={setSortedDesaCounts} counts={desaCounts} />
                   <Bar ref={desaChartRef} data={generateChartData(sortedDesaCounts)} options={chartOptions} />
@@ -360,9 +369,9 @@ function Dashboard() {
               </div>
             </div>
             <div className={`px-6 py-4 ${activeTab === "3" ? "" : "hidden"}`} id="tab-panel-3a" aria-hidden="true" role="tabpanel" aria-labelledby="tab-label-3a" tabIndex="-1">
-              <div className="w-full max-h-[1000px]">
-                <h4 className="font-bold text-large">Jumlah Mahasiswa per Kecamatan</h4>
-                <div className="w-full max-h-[1000px] overflow-y-auto">
+              <div className="w-full max-h-[2000px]">
+                <h4 className="font-bold text-large">Jumlah Persebaran Mahasiswa: {totalKeys(kecamatanCounts)}</h4>
+                <div className="w-full max-h-[2000px] overflow-y-auto">
                   <SortingButtons setSortedCounts={setSortedKecamatanCounts} counts={kecamatanCounts} />
                   <Bar ref={kecamatanChartRef} data={generateChartData(sortedKecamatanCounts)} options={chartOptions} />
                 </div>
@@ -370,7 +379,7 @@ function Dashboard() {
             </div>
             <div className={`px-6 py-4 ${activeTab === "4" ? "" : "hidden"}`} id="tab-panel-4a" aria-hidden="true" role="tabpanel" aria-labelledby="tab-label-4a" tabIndex="-1">
               <div className="w-full max-h-[1000px]">
-                <h4 className="font-bold text-large">Jumlah Mahasiswa per Kota</h4>
+                <h4 className="font-bold text-large">Jumlah Persebaran Mahasiswa: {totalKeys(kotaCounts)}</h4>
                 <div className="w-full max-h-[1000px] overflow-y-auto">
                   <SortingButtons setSortedCounts={setSortedKotaCounts} counts={kotaCounts} />
                   <Bar ref={kotaChartRef} data={generateChartData(sortedKotaCounts)} options={chartOptions} />
@@ -379,7 +388,7 @@ function Dashboard() {
             </div>
             <div className={`px-6 py-4 ${activeTab === "5" ? "" : "hidden"}`} id="tab-panel-5a" aria-hidden="true" role="tabpanel" aria-labelledby="tab-label-5a" tabIndex="-1">
               <div className="w-full max-h-[1200px]">
-                <h4 className="font-bold text-large">Jumlah Mahasiswa per Provinsi</h4>
+                <h4 className="font-bold text-large">Jumlah Persebaran Mahasiswa {totalKeys(provinsiCounts)}</h4>
                 <div className="w-full max-h-[1200px] overflow-y-auto">
                   <SortingButtons setSortedCounts={setSortedProvinsiCounts} counts={provinsiCounts} />
                   <Bar ref={provinsiChartRef} data={generateChartData(sortedProvinsiCounts)} options={chartOptions} />
@@ -388,7 +397,7 @@ function Dashboard() {
             </div>
             <div className={`px-6 py-4 ${activeTab === "6" ? "" : "hidden"}`} id="tab-panel-6a" aria-hidden="true" role="tabpanel" aria-labelledby="tab-label-6a" tabIndex="-1">
               <div className="w-full max-h-[400px]">
-                <h4 className="font-bold text-large">Jumlah Mahasiswa Kelas Pagi/Sore</h4>
+                <h4 className="font-bold text-large">Jumlah Persebaran Mahasiswa {totalKeys(kelasCounts)}</h4>
                 <div className="flex justify-center w-full max-h-[400px] overflow-y-auto">
                   <Doughnut data={generateChartData(kelasCounts)} />
                 </div>
